@@ -1,0 +1,65 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: consul
+  namespace: consul
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: consul
+      version: "0.46.0"
+      sourceRef:
+        kind: HelmRepository
+        name: hashicorp
+        namespace: default
+      interval: 1m
+  values:
+    global:
+      datacenter: "choclab"
+      enablePodSecurityPolicies: true
+      gossipEncryption:
+        secretName: consul
+        secretKey: gossip
+      tls:
+        enabled: true
+        enableAutoEncrypt: false
+        verify: true
+        httpsOnly: true
+        caCert:
+          secretName: consul
+          secretKey: cacrt
+        caKey:
+          secretName: consul
+          secretKey: cakey
+      acls:
+        manageSystemACLs: true
+      metrics:
+        enabled: true
+
+    server:
+      storageClass: nfs-client
+      serverCert:
+        secretName: choclab-consul-cert
+
+    ui:
+      enabled: true
+      ingress:
+        enabled: true
+        ingressClassName: "nginx"
+        annotations: |
+          'nginx.ingress.kubernetes.io/backend-protocol': "HTTPS"
+        pathType: Prefix
+        hosts:
+          - host: "consul.choclab.net"
+            paths:
+              - "/"
+        tls:
+          - hosts:
+            - "consul.choclab.net"
+            secretName: "choclab-consul-cert"
+
+    syncCatalog:
+      enabled: true
+
