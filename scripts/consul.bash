@@ -12,10 +12,10 @@ cd ${HOME}/.local/consul
     -key=consul-agent-ca-key.pem -dc=choclab \
     -additional-dnsname="consul-consul-server" \
     -additional-dnsname="*.consul-consul-server" \
-    -additional-dnsname="*.consul-consul-server.vault" \
-    -additional-dnsname="consul-consul-server.vault" \
-    -additional-dnsname="*.consul-consul-server.vault.svc" \
-    -additional-dnsname="consul-consul-server.vault.svc" \
+    -additional-dnsname="*.consul-consul-server.consul" \
+    -additional-dnsname="consul-consul-server.consul" \
+    -additional-dnsname="*.consul-consul-server.consul.svc" \
+    -additional-dnsname="consul-consul-server.consul.svc" \
     -additional-dnsname="*.server.choclab.choclab.net" \
     -additional-dnsname="server.choclab.choclab.net" \
     -additional-dnsname="*.consul.choclab.net" \
