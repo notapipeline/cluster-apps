@@ -3,4 +3,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - namespace.yaml
+  - secrets/choclab-consul-cert.yaml
+  - secrets/choclab-vault-cert.yaml
+  - secrets/vault-bitwarden.yaml
+  - secrets/vault-consul-acl-token.yaml
+  - vault-unseal.yaml
+  - vault.yaml
 

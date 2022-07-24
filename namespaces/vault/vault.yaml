@@ -1,0 +1,125 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vault
+  namespace: vault
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: vault
+      version: "0.20.1"
+      sourceRef:
+        kind: HelmRepository
+        name: hashicorp
+        namespace: default
+      interval: 1m
+  values:
+    global:
+      tlsDisable: false
+    server:
+      auditStorage:
+        enabled: true
+        storageClass: nfs-client
+      dataStorage:
+        storageClass: nfs-client
+      extraEnvironmentVars:
+        VAULT_CACERT: /etc/ssl/choclab-consul-cert/ca.crt
+      extraSecretEnvironmentVars:
+      - envName: CONSUL_HTTP_TOKEN
+        secretKey: token
+        secretName: vault-consul-acl-token
+      - envName: BW_ADDR
+        secretKey: address
+        secretName: vault-bitwarden
+      - envName: BW_PATH
+        secretKey: path
+        secretName: vault-bitwarden
+      - envName: BW_TOKEN
+        secretKey: token
+        secretName: vault-bitwarden
+      ha:
+        apiAddr: https://127.0.0.1:8200
+        config: |
+          ui = true
+          api_addr = "https://vault.choclab.net"
+          disable_performance_standby = "false"
+          log_level = "debug"
+
+          listener "tcp" {
+            tls_disable = "false"
+            tls_cert_file = "/etc/ssl/choclab-vault-cert/tls.crt"
+            tls_key_file = "/etc/ssl/choclab-vault-cert/tls.key"
+            address = "POD_IP:8200"
+            cluster_address = "POD_IP:8201"
+          }
+
+          listener "tcp" {
+            tls_disable = "false"
+            address = "127.0.0.1:8200"
+            cluster_address = "127.0.0.1:8201"
+            tls_cert_file = "/etc/ssl/choclab-consul-cert/tls.crt"
+            tls_key_file = "/etc/ssl/choclab-consul-cert/tls.key"
+          }
+
+          storage "consul" {
+            path = "vault/"
+            address = "consul-consul-server.consul.svc:8501"
+            scheme = "https"
+            tls_cert_file = "/etc/ssl/choclab-consul-cert/tls.crt"
+            tls_key_file = "/etc/ssl/choclab-consul-cert/tls.key"
+            tls_ca_file = "/etc/ssl/choclab-consul-cert/ca.crt"
+            tls_skip_verify = "false"
+          }
+
+          service_registration "kubernetes" {}
+        enabled: true
+        raft:
+          enabled: false
+        replicas: 3
+      ingress:
+        activeService: true
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        enabled: true
+        hosts:
+        - host: vault.choclab.net
+          paths:
+          - /
+        ingressClassName: nginx
+        labels: {}
+        pathType: Prefix
+        tls:
+        - hosts:
+          - vault.choclab.net
+          secretName: choclab-vault-cert
+      networkPolicy:
+        egress: []
+        enabled: false
+      postStart:
+      - /bin/sh
+      - -ec
+      - sleep 2 && cp /vault/scripts/vault-unseal.sh /tmp/unseal.sh && chmod +x /tmp/unseal.sh
+        && /tmp/unseal.sh
+      volumeMounts:
+      - mountPath: /etc/ssl/choclab-consul-cert
+        name: choclab-consul-cert
+        readOnly: true
+      - mountPath: /etc/ssl/choclab-vault-cert
+        name: choclab-vault-cert
+        readOnly: true
+      - mountPath: /vault/scripts
+        name: vault-unseal
+      volumes:
+      - name: choclab-consul-cert
+        secret:
+          secretName: choclab-consul-cert
+      - name: choclab-vault-cert
+        secret:
+          secretName: choclab-vault-cert
+      - configMap:
+          name: vault-unseal
+        name: vault-unseal
+    ui:
+      enabled: true
