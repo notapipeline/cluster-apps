@@ -6,4 +6,5 @@ resources:
   - secrets/grafana-admin.yaml
   - secrets/grafana-db.yaml
   - grafana.yaml
-
+  - secrets/jupyter-authentication.yaml
+  - jupyterhub.yaml

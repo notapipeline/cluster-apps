@@ -1,0 +1,58 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: jupyter
+  namespace: frontend
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: jupyterhub
+      version: "1.1.3-n779.h5326b58f"
+      sourceRef:
+        kind: HelmRepository
+        name: jupyterhub
+        namespace: default
+      interval: 1m
+  valuesFrom:
+    - kind: Secret
+      name: jupyter-authentication
+  values:
+    hub:
+      db:
+        type: mysql
+      config:
+        JupyterHub:
+          admin_access: false
+      extraConfig:
+        00-database-setting: |
+          c.JupyterHub.db_kwargs = {
+            'connect_args': {
+              'password': get_secret_value("hub.db.password", None)
+            }
+          }
+    singleuser:
+      image:
+        name: jupyter/datascience-notebook
+        tag: latest
+      cmd: null
+      allowPrivilegeEscalation: false
+      storage:
+        dynamic:
+          storageClass: nfs-client
+      extraFiles:
+        jupyter_notebook_config.json:
+          mountPath: /etc/jupyter/jupyter_notebook_config.json
+          data:
+            MappingKernelManager:
+              cull_idle_timeout: 1200
+              cull_interval: 300
+              cull_connected: false
+              cull_busy: false
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - notebook.choclab.net
+
