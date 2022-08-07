@@ -7,4 +7,5 @@ resources:
   - secrets/influxdb2-auth.yaml
   - influxdb2.yaml
   - telegraf.yaml
+  - promtail.yaml
 
