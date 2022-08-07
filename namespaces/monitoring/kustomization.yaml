@@ -4,4 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - loki.yaml
+  - secrets/influxdb2-auth.yaml
+  - influxdb2.yaml
+  - telegraf.yaml
 

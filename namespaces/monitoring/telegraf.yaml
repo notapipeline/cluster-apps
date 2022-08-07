@@ -1,0 +1,160 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: telegraf-ds
+  namespace: monitoring
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: telegraf-ds
+      version: "1.1.1"
+      sourceRef:
+        kind: HelmRepository
+        name: influxdata
+        namespace: default
+      interval: 1m
+  values:
+    env:
+      - name: HOSTNAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+      - name: INFLUX_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: "influxdb2-auth"
+            key: "admin-token"
+
+      - name: HOSTIP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      - name: "HOST_PROC"
+        value: "/hostfs/proc"
+      - name: "HOST_SYS"
+        value: "/hostfs/sys"
+
+    rbac:
+      create: true
+
+    serviceAccount:
+      create: true
+
+    override_config:
+      toml: ~
+
+    config:
+      global_tags:
+        cluster: "nebula"
+      agent:
+        interval: "10s"
+        round_interval: true
+        metric_batch_size: 1000
+        metric_buffer_limit: 100000
+        collection_jitter: "0s"
+        flush_interval: "10s"
+        flush_jitter: "0s"
+        precision: ""
+        debug: false
+        quiet: false
+        logfile: ""
+        hostname: "$HOSTNAME"
+        omit_hostname: false
+      outputs:
+        - influxdb_v2:
+            urls:
+              - "https://influx.choclab.net"
+            organization: choclab
+            bucket: nebula
+            token: "$INFLUX_TOKEN"
+      monitor_self: false
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: telegraf
+  namespace: monitoring
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: telegraf
+      version: "1.8.19"
+      sourceRef:
+        kind: HelmRepository
+        name: influxdata
+        namespace: default
+      interval: 1m
+  values:
+    env:
+      - name: HOSTNAME
+        value: "telegraf-polling-service"
+      - name: INFLUX_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: "influxdb2-auth"
+            key: "admin-token"
+    service:
+      enabled: true
+      type: ClusterIP
+      annotations: {}
+
+    rbac:
+      create: true
+      clusterWide: true
+      rules:
+        - apiGroups: ["*"]
+          resources: ["*"]
+          verbs: ["*"]
+
+    config:
+      global_tags:
+        cluster: "choclab"
+        organisation: "choclab"
+        serviceline: "nebula"
+      agent:
+        interval: "10s"
+        round_interval: true
+        metric_batch_size: 1000
+        metric_buffer_limit: 10000
+        collection_jitter: "0s"
+        flush_interval: "10s"
+        flush_jitter: "0s"
+        precision: ""
+        debug: false
+        quiet: false
+        logfile: ""
+        hostname: "$HOSTNAME"
+        omit_hostname: false
+      processors:
+        - enum:
+            mapping:
+              field: "status"
+              dest: "status_code"
+              value_mappings:
+                healthy: 1
+                problem: 2
+                critical: 3
+      outputs:
+        - influxdb_v2:
+            urls:
+              - "https://influx.choclab.net"
+            organization: choclab
+            bucket: nebula
+            token: "$INFLUX_TOKEN"
+      inputs:
+        - statsd:
+            service_address: ":8125"
+            percentiles:
+              - 50
+              - 95
+              - 99
+            metric_separator: "_"
+            allowed_pending_messages: 10000
+            percentile_limit: 1000
+        - kube_inventory:
+            url: "https://kubernetes.default.svc"
+            insecure_skip_verify: true
+            namespace: ""
