@@ -6,4 +6,5 @@ resources:
   - ../../namespaces/vault
   - ../../namespaces/frontend
   - ../../namespaces/monitoring
+  - ../../namespaces/kyverno
 
