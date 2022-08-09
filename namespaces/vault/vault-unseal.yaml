@@ -1,6 +1,8 @@
 apiVersion: v1
 data:
   vault-unseal.sh: |
+    # Give the pods time to get ready...
+    sleep 30
     # If vault isn't initialised, exit cleanly to allow the pods to start
     # for the initialisation process
     if [ "$(vault status | awk '/Initialized/{print $NF}')" != 'true' ]; then
@@ -13,26 +15,26 @@ data:
 
           # get a key for the current node
           # setting v to empty string if the connection cannot be established (bwv is not running)
-          v=$(wget --no-check-certificate -q -O - --header "Authorization: Bearer $BW_TOKEN" $BW_ADDR/$BW_PATH?field=unseal-$i 2>&1 | grep -v refused);
+          v=$(wget --no-check-certificate -q -O - --header "Authorization: Bearer $BW_TOKEN" $BW_ADDR/$BW_PATH?field=unseal-$i 2>&1 | grep -v refused)
           if [ "$v" != "" ]; then
-            break;
-          fi;
+            break
+          fi
 
           # if we didn't get a response, sleep for a second and try again
-          sleep 1;
-        done;
+          sleep 1
+        done
 
         # Try and unseal the vault using the current key
-        vault operator unseal $(echo $v | awk -F\" "/value/{print \$4}");
+        vault operator unseal $(echo $v | awk -F\" "/value/{print \$4}")
       done;
 
       # If Vault is unsealed, break the outer loop
       if [ $(vault status | grep Sealed | awk "{print \$NF}") = false ]; then
-        break;
-      fi;
+        break
+      fi
 
       # If not, sleep for a second and try again
-      sleep 1;
+      sleep 1
     done
 kind: ConfigMap
 metadata:
