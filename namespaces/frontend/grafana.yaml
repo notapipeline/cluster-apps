@@ -38,7 +38,7 @@ spec:
       analytics:
         check_for_updates: true
       database:
-        host: nebula.choclab.net:3306
+        host: ${database}.${domain}:3306
         name: grafana
         type: mysql
       grafana_net:
@@ -58,7 +58,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-      - grafana.choclab.net
+      - grafana.${domain}
       ingressClassName: nginx
     resources:
       requests:

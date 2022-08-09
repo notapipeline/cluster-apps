@@ -65,9 +65,9 @@ spec:
       outputs:
         - influxdb_v2:
             urls:
-              - "https://influx.choclab.net"
-            organization: choclab
-            bucket: nebula
+              - "https://influx.${domain}"
+            organization: ${organisation}
+            bucket: ${bucket}
             token: "$INFLUX_TOKEN"
       monitor_self: false
       docker_endpoint: ""
@@ -112,9 +112,9 @@ spec:
 
     config:
       global_tags:
-        cluster: "choclab"
-        organisation: "choclab"
-        serviceline: "nebula"
+        cluster: "${cluster}"
+        organisation: "${organisation}"
+        serviceline: "${bucket}"
       agent:
         interval: "10s"
         round_interval: true

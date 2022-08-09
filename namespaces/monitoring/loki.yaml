@@ -27,7 +27,7 @@ spec:
         kubernetes.io/ingress.class: nginx
       enabled: true
       hosts:
-      - host: loki.choclab.net
+      - host: loki.${domain}
         paths:
         - /
     persistence:

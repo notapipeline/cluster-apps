@@ -17,14 +17,14 @@ spec:
       interval: 1m
   values:
     adminUser:
-      bucket: nebula
+      bucket: ${bucket}
       existingSecret: influxdb2-auth
-      organization: choclab
+      organization: ${organisation}
     ingress:
       annotations:
         kubernetes.io/ingress.class: nginx
       enabled: true
-      hostname: influx.choclab.net
+      hostname: influx.${domain}
       ingressClassName: nginx
     persistence:
       storageClass: nfs-client

@@ -17,7 +17,7 @@ spec:
       interval: 1m
   values:
     global:
-      datacenter: "choclab"
+      datacenter: ${cluster}
       enablePodSecurityPolicies: true
       gossipEncryption:
         secretName: consul
@@ -41,7 +41,7 @@ spec:
     server:
       storageClass: nfs-client
       serverCert:
-        secretName: choclab-consul-cert
+        secretName: ${cluster}-consul-cert
 
     ui:
       enabled: true
@@ -52,13 +52,13 @@ spec:
           'nginx.ingress.kubernetes.io/backend-protocol': "HTTPS"
         pathType: Prefix
         hosts:
-          - host: "consul.choclab.net"
+          - host: "consul.${domain}"
             paths:
               - "/"
         tls:
           - hosts:
-            - "consul.choclab.net"
-            secretName: "choclab-consul-cert"
+            - "consul.${domain}"
+            secretName: "${cluster}-consul-cert"
 
     syncCatalog:
       enabled: true

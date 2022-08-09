@@ -54,5 +54,5 @@ spec:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - notebook.choclab.net
+        - notebook.${domain}
 

@@ -25,7 +25,7 @@ spec:
       dataStorage:
         storageClass: nfs-client
       extraEnvironmentVars:
-        VAULT_CACERT: /etc/ssl/choclab-consul-cert/ca.crt
+        VAULT_CACERT: /etc/ssl/${cluster}-consul-cert/ca.crt
       extraSecretEnvironmentVars:
       - envName: CONSUL_HTTP_TOKEN
         secretKey: token
@@ -43,14 +43,14 @@ spec:
         apiAddr: https://127.0.0.1:8200
         config: |
           ui = true
-          api_addr = "https://vault.choclab.net"
+          api_addr = "https://vault.${domain}"
           disable_performance_standby = "false"
           log_level = "debug"
 
           listener "tcp" {
             tls_disable = "false"
-            tls_cert_file = "/etc/ssl/choclab-vault-cert/tls.crt"
-            tls_key_file = "/etc/ssl/choclab-vault-cert/tls.key"
+            tls_cert_file = "/etc/ssl/${cluster}-vault-cert/tls.crt"
+            tls_key_file = "/etc/ssl/${cluster}-vault-cert/tls.key"
             address = "POD_IP:8200"
             cluster_address = "POD_IP:8201"
           }
@@ -59,17 +59,17 @@ spec:
             tls_disable = "false"
             address = "127.0.0.1:8200"
             cluster_address = "127.0.0.1:8201"
-            tls_cert_file = "/etc/ssl/choclab-consul-cert/tls.crt"
-            tls_key_file = "/etc/ssl/choclab-consul-cert/tls.key"
+            tls_cert_file = "/etc/ssl/${cluster}-consul-cert/tls.crt"
+            tls_key_file = "/etc/ssl/${cluster}-consul-cert/tls.key"
           }
 
           storage "consul" {
             path = "vault/"
             address = "consul-consul-server.consul.svc:8501"
             scheme = "https"
-            tls_cert_file = "/etc/ssl/choclab-consul-cert/tls.crt"
-            tls_key_file = "/etc/ssl/choclab-consul-cert/tls.key"
-            tls_ca_file = "/etc/ssl/choclab-consul-cert/ca.crt"
+            tls_cert_file = "/etc/ssl/${cluster}-consul-cert/tls.crt"
+            tls_key_file = "/etc/ssl/${cluster}-consul-cert/tls.key"
+            tls_ca_file = "/etc/ssl/${cluster}-consul-cert/ca.crt"
             tls_skip_verify = "false"
           }
 
@@ -84,7 +84,7 @@ spec:
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         enabled: true
         hosts:
-        - host: vault.choclab.net
+        - host: vault.${domain}
           paths:
           - /
         ingressClassName: nginx
@@ -92,8 +92,8 @@ spec:
         pathType: Prefix
         tls:
         - hosts:
-          - vault.choclab.net
-          secretName: choclab-vault-cert
+          - vault.${domain}
+          secretName: ${cluster}-vault-cert
       networkPolicy:
         egress: []
         enabled: false
@@ -103,21 +103,21 @@ spec:
       - sleep 2 && cp /vault/scripts/vault-unseal.sh /tmp/unseal.sh && chmod +x /tmp/unseal.sh
         && /tmp/unseal.sh
       volumeMounts:
-      - mountPath: /etc/ssl/choclab-consul-cert
-        name: choclab-consul-cert
+      - mountPath: /etc/ssl/${cluster}-consul-cert
+        name: ${cluster}-consul-cert
         readOnly: true
-      - mountPath: /etc/ssl/choclab-vault-cert
-        name: choclab-vault-cert
+      - mountPath: /etc/ssl/${cluster}-vault-cert
+        name: ${cluster}-vault-cert
         readOnly: true
       - mountPath: /vault/scripts
         name: vault-unseal
       volumes:
-      - name: choclab-consul-cert
+      - name: ${cluster}-consul-cert
         secret:
-          secretName: choclab-consul-cert
-      - name: choclab-vault-cert
+          secretName: ${cluster}-consul-cert
+      - name: ${cluster}-vault-cert
         secret:
-          secretName: choclab-vault-cert
+          secretName: ${cluster}-vault-cert
       - configMap:
           name: vault-unseal
         name: vault-unseal
