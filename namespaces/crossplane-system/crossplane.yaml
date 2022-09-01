@@ -8,8 +8,8 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: vault
-      version: "0.20.1"
+      chart: crossplane
+      version: 1.9.0
       sourceRef:
         kind: HelmRepository
         name: crossplane
