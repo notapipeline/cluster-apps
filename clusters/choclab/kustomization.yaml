@@ -7,4 +7,5 @@ resources:
   - ../../namespaces/frontend
   - ../../namespaces/monitoring
   - ../../namespaces/kyverno
+  - ../../namespaces/crossplane-system
 
