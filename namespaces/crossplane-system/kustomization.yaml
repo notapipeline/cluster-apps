@@ -8,3 +8,4 @@ resources:
   - secrets/choclab-aws-credentials.yaml
   - crossplane.yaml
   - provider.yaml
+  - aws

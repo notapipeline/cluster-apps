@@ -1,0 +1,18 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: VPC
+metadata:
+  name: test-vpc
+  annotations:
+    crossplane.io/external-name: vpc-014344f646fae1d14
+spec:
+  deletionPolicy: Orphan
+  forProvider:
+    region: ${region}
+    cidrBlock: ${cidr1}
+    enableDnsHostNames: true
+    enableDnsSupport: true
+    tags:
+      - key: Name
+        value: test-vpc
+  providerConfigRef:
+    name: choclab-aws-provider

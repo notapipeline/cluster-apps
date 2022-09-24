@@ -1,0 +1,29 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+metadata:
+  name: sample-subnet1
+spec:
+  forProvider:
+    region: ${region}
+    availabilityZone: ${region}a
+    cidrBlock: 10.0.1.0/24
+    vpcIdRef:
+      name: test-vpc
+    mapPublicIPOnLaunch: false
+  providerConfigRef:
+    name: choclab-aws-provider
+---
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+metadata:
+  name: sample-subnet2
+spec:
+  forProvider:
+    region: ${region}
+    availabilityZone: ${region}b
+    cidrBlock: 10.0.2.0/24
+    vpcIdRef:
+      name: test-vpc
+    mapPublicIPOnLaunch: false
+  providerConfigRef:
+    name: choclab-aws-provider

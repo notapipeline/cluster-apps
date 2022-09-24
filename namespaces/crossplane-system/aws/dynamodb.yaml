@@ -1,0 +1,25 @@
+apiVersion: dynamodb.aws.crossplane.io/v1alpha1
+kind: Table
+metadata:
+  name: crossplane-example
+spec:
+  forProvider:
+    region: ${region}
+    attributeDefinitions:
+      - attributeName: example
+        attributeType: S
+    keySchema:
+      - attributeName: example
+        keyType: HASH
+    billingMode: PROVISIONED
+    provisionedThroughput:
+      readCapacityUnits: 1
+      writeCapacityUnits: 1
+    streamSpecification:
+      streamEnabled: true
+      streamViewType: NEW_AND_OLD_IMAGES
+  providerConfigRef:
+    name: choclab-aws-provider
+  writeConnectionSecretToRef:
+    name: existing
+    namespace: crossplane-system

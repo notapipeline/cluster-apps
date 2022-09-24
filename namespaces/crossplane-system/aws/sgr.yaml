@@ -1,0 +1,17 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: sample-sgr
+spec:
+  forProvider:
+    region: ${region}
+    protocol: "tcp"
+    fromPort: 443
+    toPort: 443
+    type: "ingress"
+    securityGroupIdRef:
+      name: crossplane-test-sg
+    cidrBlock: "10.0.0.0/22"
+    description: "sample-sgr description"
+  providerConfigRef:
+    name: choclab-aws-provider
