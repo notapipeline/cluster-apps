@@ -1,0 +1,11 @@
+apiVersion: aws.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: choclab-aws-provider
+spec:
+  credentials:
+    secretRef:
+      key: eu-central-1
+      name: choclab-aws-credentials
+      namespace: crossplane-system
+    source: Secret
