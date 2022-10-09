@@ -18,7 +18,7 @@ spec:
   values:
     global:
       datacenter: ${cluster}
-      enablePodSecurityPolicies: true
+      enablePodSecurityPolicies: false
       gossipEncryption:
         secretName: consul
         secretKey: gossip
