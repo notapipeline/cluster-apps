@@ -1,0 +1,28 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: nebula
+  namespace: default
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: cluster-apps
+  path: "./clusters/nebula"
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+  postBuild:
+    substitute:
+      domain: choclab.net
+      organisation: choclab
+      cluster: choclab
+      bucket: nebula
+      database: nebula
+      region: eu-central-1
+      cidr1: 10.0.0.0/16
+      nfsServer: nebula
+      nfsPath: /cluster/fs

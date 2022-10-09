@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: cluster-apps
+  namespace: default
+spec:
+  interval: 30s
+  ref:
+    branch: main
+  secretRef:
+    name: https-credentials
+  url: https://github.com/notapipeline/cluster-apps

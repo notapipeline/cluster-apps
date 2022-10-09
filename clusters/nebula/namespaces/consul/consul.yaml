@@ -47,7 +47,7 @@ spec:
       enabled: true
       ingress:
         enabled: true
-        ingressClassName: "nginx"
+        ingressClassName: nginx
         annotations: |
           'nginx.ingress.kubernetes.io/backend-protocol': "HTTPS"
         pathType: Prefix

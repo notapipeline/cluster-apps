@@ -1,0 +1,98 @@
+---
+# NGINX helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  interval: 1m
+  url:  https://kubernetes.github.io/ingress-nginx
+
+---
+# NFS driver helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: nfs-driver
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+
+---
+# Dashboard repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: dashboard
+  namespace: kube-system
+spec:
+  interval: 1m
+  url: https://kubernetes.github.io/dashboard
+
+---
+# Hashicorp helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: hashicorp
+  namespace: default
+spec:
+  interval: 1m
+  url: https://helm.releases.hashicorp.com
+
+---
+# Influx data helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: influxdata
+  namespace: default
+spec:
+  interval: 1m
+  url: https://helm.influxdata.com
+
+---
+# Grafana helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: grafana
+  namespace: default
+spec:
+  interval: 1m
+  url: https://grafana.github.io/helm-charts
+
+---
+# Kyverno helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: kyverno
+  namespace: default
+spec:
+  interval: 1m
+  url: https://kyverno.github.io/kyverno
+
+---
+# Crossplane helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: crossplane
+  namespace: default
+spec:
+  interval: 1m
+  url: https://charts.crossplane.io/stable
+
+---
+# Jupyterhub helm repository
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: jupyterhub
+  namespace: default
+spec:
+  interval: 1m
+  url: https://jupyterhub.github.io/helm-chart
