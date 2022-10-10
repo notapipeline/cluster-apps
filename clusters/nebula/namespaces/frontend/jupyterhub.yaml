@@ -32,6 +32,9 @@ spec:
               'password': get_secret_value("hub.db.password", None)
             }
           }
+    proxy:
+      service:
+        type: ClusterIP
     singleuser:
       image:
         name: jupyter/datascience-notebook
