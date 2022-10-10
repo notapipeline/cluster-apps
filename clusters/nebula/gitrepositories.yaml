@@ -28,4 +28,4 @@ spec:
     - repository:
         name: hello-world
       fromPath: deploy/kubernetes
-      toPath: ./namespaces/default
+      toPath: cluster/nebula/namespaces/default
