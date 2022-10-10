@@ -19,6 +19,11 @@ spec:
     replicaCount: 1
     metricsScraper:
       enabled: true
-    metricsServer:
+    metrics-server:
       enabled: true
+    ingress:
+      enabled: true
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      className: nginx
 
