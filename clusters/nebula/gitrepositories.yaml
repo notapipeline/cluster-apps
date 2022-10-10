@@ -25,7 +25,7 @@ spec:
     name: https-credentials
   url: https://github.com/notapipeline/cluster-apps
   include:
-    - repositories:
+    - repository:
         name: hello-world
       fromPath: deploy/kubernetes/secret ç
       toPath: ./namespaces/default
