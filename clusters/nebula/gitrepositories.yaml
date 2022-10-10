@@ -27,5 +27,5 @@ spec:
   include:
     - repository:
         name: hello-world
-      fromPath: deploy/kubernetes/secret ç
+      fromPath: deploy/kubernetes/secret
       toPath: ./namespaces/default
