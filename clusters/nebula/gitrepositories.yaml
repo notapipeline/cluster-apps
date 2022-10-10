@@ -2,6 +2,19 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
+  name: hello-world
+  namespace: default
+spec:
+  interval: 30s
+  ref:
+    branch: test
+  secretRef:
+    name: https-credentials
+  url: https://github.com/mproffitt/gs-helloworld
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
   name: cluster-apps
   namespace: default
 spec:
@@ -11,3 +24,8 @@ spec:
   secretRef:
     name: https-credentials
   url: https://github.com/notapipeline/cluster-apps
+  include:
+    - repositories:
+        name: hello-world
+      fromPath: deploy/kubernetes/secret ç
+      toPath: ./namespaces/default
