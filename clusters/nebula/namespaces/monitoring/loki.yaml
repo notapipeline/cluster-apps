@@ -16,6 +16,8 @@ spec:
         namespace: default
       interval: 1m
   values:
+    rbac:
+      pspEnabled: false
     config:
       query_range:
         parallelise_shardable_queries: false
