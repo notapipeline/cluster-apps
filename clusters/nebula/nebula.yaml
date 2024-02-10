@@ -1,9 +1,22 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: cluster-apps
+  namespace: flux-system
+spec:
+  interval: 30s
+  ref:
+    branch: main
+  secretRef:
+    name: https-credentials
+  url: https://github.com/notapipeline/cluster-apps
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: nebula
-  namespace: default
+  namespace: flux-system
 spec:
   interval: 1m
   sourceRef:
@@ -14,7 +27,7 @@ spec:
   decryption:
     provider: sops
     secretRef:
-      name: sops-gpg
+      name: sops
   postBuild:
     substitute:
       domain: choclab.net

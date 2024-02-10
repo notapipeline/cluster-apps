@@ -76,17 +76,6 @@ spec:
   url: https://kyverno.github.io/kyverno
 
 ---
-# Crossplane helm repository
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: crossplane
-  namespace: default
-spec:
-  interval: 1m
-  url: https://charts.crossplane.io/stable
-
----
 # Jupyterhub helm repository
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository

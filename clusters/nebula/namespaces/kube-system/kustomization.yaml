@@ -1,0 +1,4 @@
+---
+resources:
+  - dashboard.yaml
+  - nfs.yaml

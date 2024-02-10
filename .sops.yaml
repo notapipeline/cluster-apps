@@ -1,4 +1,8 @@
 creation_rules:
+  - path_regex: clusters/nebula/namespaces/crossplane-system/crossplane/.*.enc.yaml
+    encrypted_regex: ^(data|stringData)$
+    pgp: 28152FC73F880D548CD95820C785272E4E23E00B
+
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
     pgp: F00DF7641634FAF2C004B9D0273CEC26773FA491

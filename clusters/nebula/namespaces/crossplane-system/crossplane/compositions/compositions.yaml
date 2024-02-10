@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: crossplane
+  name: crossplane-compositions
   namespace: crossplane-system
 spec:
   interval: 1m
@@ -10,7 +10,7 @@ spec:
     kind: GitRepository
     name: cluster-apps
     namespace: flux-system
-  path: "./clusters/nebula/namespaces/crossplane-system/crossplane"
+  path: "./clusters/nebula/namespaces/crossplane-system/crossplane/compositions"
   prune: true
   decryption:
     provider: sops
@@ -22,3 +22,5 @@ spec:
       organisation: ${organisation}
       cluster: ${cluster}
       region: ${region}
+  dependsOn:
+  - name: crossplane-components

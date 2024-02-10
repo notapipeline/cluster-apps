@@ -1,0 +1,9 @@
+resources:
+  - consul
+  - frontend
+  - ingress-nginx
+  - kube-system
+  - kyverno
+  - monitoring
+  - vault
+  - crossplane-system

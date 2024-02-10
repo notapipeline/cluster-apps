@@ -5,7 +5,6 @@ metadata:
   name: crossplane
 resources:
   - namespace.yaml
-  - secrets/choclab-aws-credentials.yaml
   - crossplane.yaml
-  - provider.yaml
-  - aws
+  - crossplane
+  - secrets
